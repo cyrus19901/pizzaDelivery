@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Ahmedur Rahman Shovon">
+    <title>Dropdown Example</title>
+</head>
+<body>
+  <p>Create a new Order : </p>
+  <form id="form1" method="POST" action="/submit" enctype="multipart/form-data">
+	<label for="name">Name:</label>
+		<input type="text" class="form-control" id="name" name="name" placeholder="What's your name?">
+	<label for="email">Email:</label>
+		<input type="text" class="form-control" id="email" name="email" placeholder="Your email will be used to contact you.">
+	<label for="number">Phone number:</label>
+		<input type="number" class="form-control" id="number" name="number" placeholder="Enter a number.">
+    <select id="mySelect" name = "pizza">
+      <option value="Cheese">Cheese</option>
+      <option value="Veggie">Veggie Delight</option>
+      <option value="Meat">Meat Lovers</option>
+      <option value="Mushroom">Mushroom</option>
+    </select>
+    <input type="submit" value="Submit">
+  </form>
+  <p>When you select a new car, a function is triggered which outputs the value of the selected car.</p>
+  <div id="result">
+    {% if car_brand is defined %}
+        You have selected: {{ car_brand }}
+    {% endif %}
+  </div>
+</body>
+</html>
