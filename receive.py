@@ -42,9 +42,8 @@ class PizzaMakingService(object):
 		queue[self.corr_id] = self.response
 		return self.response
 			
-
 	def makePizza(self,ch,method,props,pizzaDetails):
-		time.sleep(10)
+		time.sleep(random.randint(20,30))
 		orderId = uuid.uuid4()
 		responsePayload = {'orderId': str(orderId),
 							'name': pizzaDetails['user']['name'],
