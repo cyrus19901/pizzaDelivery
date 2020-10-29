@@ -21,23 +21,16 @@ class PizzaRpcClient(object):
 			on_message_callback=self.on_response,
 			auto_ack=True)
 
-
-	def resp(self):
-		self.channel = self.connection.channel()
-		self.channel.basic_consume(
-			queue='completed_order',
-			on_message_callback=self.on_response,
-			auto_ack=True)
+	def on_request(self ,ch, method, props, body):
+		payload = json.loads(body.decode('utf-8'))
+		if payload == None:
+			print("Something went wrong")
+		else:
+			print("Order Ready to Pickup : " + payload['orderId'] + " for: " + payload['name'] + " at " + payload['readyAt'])
 
 	def on_response(self, ch, method, props, body):
-		print(body)
 		if self.corr_id == props.correlation_id:
 			self.response = body
-
-	def on_request(ch, method, props, body):
-		print("here")
-		payload = json.loads(body.decode('utf-8'))
-		print(payload)
 
 	def call(self, payload,queueName):
 		self.response = None
@@ -57,20 +50,16 @@ class PizzaRpcClient(object):
 		queue[self.corr_id] = self.response
 		return self.response
 
-	# def call2(self):
-	# 	newResult = self.channel.queue_declare(queue='completed_order')
-	# 	callback_queue = newResult.method.queue
-	# 	print(callback_queue)
-	# 	self.channel.basic_consume(
-	# 		queue=callback_queue,
-	# 		on_message_callback=self.on_request,
-	# 		auto_ack=True)
-
+	def receiveCall(self):
+		self.channel.basic_consume(
+			queue='completed_order',
+			on_message_callback=self.on_request,auto_ack=True)
+		self.channel.start_consuming()
 
 @app.route("/getStatus",methods=['GET', 'POST'])
 def send_results():
 	newOrder_rpc = PizzaRpcClient()
-	threading.Thread(target=newOrder_rpc.resp).start()
+	threading.Thread(target=newOrder_rpc.receiveCall).start()
 	return render_template("home.html")
 
 @app.route('/',methods=['GET', 'POST'])
